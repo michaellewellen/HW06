@@ -15,16 +15,18 @@ namespace HW06
         {
             PurchasePrice = purchasePrice;
             DownPayment = downPayment;
-            IntSlider = intSlider;
-            YrsSlider = yrsSlider;
+            IntSlider = intSlider/1200;
+            YrsSlider = yrsSlider*12;
             MortgageAmount = PurchasePrice - DownPayment;
 
             // Calculate Monthly Payment
-            double expo = Math.Pow((1 + IntSlider), YrsSlider);
-            double d = (expo - 1) / (IntSlider * expo);
+            double expo = Math.Pow((1 + (IntSlider)), YrsSlider);
+            double d = (expo - 1) / ((IntSlider) * expo);
             double amount = MortgageAmount / d;
             MonthlyPayment = Math.Round(amount, 2);
-            TotalInterest = MonthlyPayment * 12 * YrsSlider - MortgageAmount;
+
+            // Other fields
+            TotalInterest = MonthlyPayment * YrsSlider - MortgageAmount;
             TotalPrincipal = MortgageAmount;
             PercentInterest = TotalInterest / (MonthlyPayment * 12 * YrsSlider);
             PercentPrincipal = 1 - PercentInterest;
@@ -32,15 +34,15 @@ namespace HW06
             PrincipalHeight = 100 * PercentPrincipal;
             if (PercentInterest <= .4)
             {
-                EmotionImage = new BitmapImage(new Uri(@"Resources\p2.png", UriKind.Relative));
+                EmotionImage = new BitmapImage(new Uri(@"Resources\Happy.png", UriKind.Relative));
             }
             else if (PercentInterest >= .6)
             {
-                EmotionImage = new BitmapImage(new Uri(@"Resources\p2.png", UriKind.Relative));
+                EmotionImage = new BitmapImage(new Uri(@"Resources\Sad.png", UriKind.Relative));
             }
             else
             {
-                EmotionImage = new BitmapImage(new Uri(@"Resources\p2.png", UriKind.Relative));
+                EmotionImage = new BitmapImage(new Uri(@"Resources\neutral.png", UriKind.Relative));
             }
 
 

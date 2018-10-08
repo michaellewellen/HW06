@@ -14,7 +14,7 @@
     <Canvas>
         <Image Height="450"
                Source="Resources\gray.jpg" />
-        <Grid>
+        <Grid >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="1*" />
@@ -37,7 +37,8 @@
             <!--Row 0 elements-->
             <StackPanel Grid.Column="1">
                 <TextBlock Padding="10,15,10,10">Mortgage Amount</TextBlock>
-                <TextBox Text="{Binding MortgageAmount}"></TextBox>
+                <TextBlock DataContext="{Binding NewLoan}"
+                           Text="{Binding MortgageAmount}" />
             </StackPanel>
 
             <TextBlock Grid.Column="2"
@@ -141,7 +142,8 @@
                                HorizontalAlignment="Center">% Principal</TextBlock>
                 </StackPanel>
             </DockPanel>
-            <Image  Height="50"
+            <Image  DataContext="{Binding Path=NewLoan}"
+                    Height="50"
                     Grid.Row="3"
                     Grid.Column="5"
                     Source="{Binding EmotionImage}" />
