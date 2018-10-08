@@ -25,10 +25,5 @@ namespace HW06
             InitializeComponent();
         }
 
-        private void CalendarChanged(object sender, SelectionChangedEventArgs e)
-        {
-            var VM = (MortgageViewModel)DataContext;
-            VM.CalendarChanged(e.OriginalSource);
-        }
     }
 }

@@ -16,17 +16,24 @@ namespace HW06
         public MortgageViewModel()
         {
             Mortgage NewLoan = new Mortgage(100000, 0, 4, 30);
+            NewLoan.PropertyChanged += NewLoan_PropertyChanged;
         }
 
-        internal void CalendarChanged(object key)
+        private void NewLoan_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            DateTime temp = (DateTime)key;
-            NewLoan.StartDate = temp;
-            NewLoan.FinalDate = temp.AddYears(30);
-
+            OnPropertyChanged(nameof(NewLoan));
         }
 
-        public Mortgage NewLoan { get; private set; }
+        
+
+        //public Mortgage NewLoan { get; private set; }
+        private Mortgage newLoan;
+        public Mortgage NewLoan
+        {
+            get { return newLoan; }
+            set { SetField(ref newLoan, value); }
+        }
+
 
         #region INotifyPropertyChanged Implementation
         public event PropertyChangedEventHandler PropertyChanged;

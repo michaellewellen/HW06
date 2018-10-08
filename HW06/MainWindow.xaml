@@ -9,7 +9,7 @@
         Height="450"
         Width="650">
     <Window.DataContext>
-        <local:MortgageViewModel />
+        <local:Mortgage />
     </Window.DataContext>
     <Canvas>
         <Image Height="450"
@@ -37,8 +37,8 @@
             <!--Row 0 elements-->
             <StackPanel Grid.Column="1">
                 <TextBlock Padding="10,15,10,10">Mortgage Amount</TextBlock>
-                <TextBlock DataContext="{Binding NewLoan}"
-                           Text="{Binding MortgageAmount}" />
+                <TextBlock 
+                           Text="{Binding MortgageAmount,StringFormat=c0, UpdateSourceTrigger=PropertyChanged}" />
             </StackPanel>
 
             <TextBlock Grid.Column="2"
@@ -46,7 +46,7 @@
 
             <StackPanel Grid.Column="3">
                 <TextBlock Padding="10,15,10,10">Purchase Price</TextBlock>
-                <TextBox Text="{Binding PurchasePrice}"></TextBox>
+                <TextBox Text="{Binding PurchasePrice, StringFormat=c0,UpdateSourceTrigger=PropertyChanged}"></TextBox>
             </StackPanel>
 
             <TextBlock Grid.Column="4"
@@ -54,7 +54,7 @@
 
             <StackPanel Grid.Column="5">
                 <TextBlock Padding="10,15,10,10">Down Payment</TextBlock>
-                <TextBox Text="{Binding DownPayment}"></TextBox>
+                <TextBox Text="{Binding DownPayment,StringFormat=c0}"></TextBox>
             </StackPanel>
 
             <!--Row 1 Elements-->
@@ -62,9 +62,10 @@
                         Grid.Column="1">
                 <TextBlock Padding="10,15,10,10">Interest (%)</TextBlock>
                 <TextBox HorizontalContentAlignment="Center"
-                         Text="{Binding ElementName=IntSlider, Path=Value, StringFormat={}{0:#.##}%, UpdateSourceTrigger=PropertyChanged}" />
+                         Text="{Binding IntSlider,StringFormat={}{0:#.##}%, UpdateSourceTrigger=PropertyChanged}" />
                 <Slider Maximum="10"
                         Name="IntSlider"
+                        Value="{Binding IntSlider}"
                         TickPlacement="BottomRight"
                         TickFrequency="1" />
             </StackPanel>
@@ -72,9 +73,9 @@
             <StackPanel Grid.Column="3"
                         Grid.Row="1">
                 <TextBlock Padding="10,15,10,10">Loan Period (Yrs)</TextBlock>
-                <TextBox Text="{Binding ElementName=YrsSlider, Path=Value, StringFormat={}{0:#} Yrs, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBox Text="{Binding YrsSlider, StringFormat={}{0:#} Yrs, UpdateSourceTrigger=PropertyChanged}" />
                 <Slider Maximum="30"
-                        Name="YrsSlider"
+                        Value="{Binding YrsSlider}"   
                         TickPlacement="BottomRight"
                         IsSnapToTickEnabled="True"
                         TickFrequency="1" />
@@ -82,7 +83,7 @@
             <StackPanel Grid.Row="1"
                         Grid.Column="5">
                 <TextBlock Padding="10,15,10,10">Monthly Payment</TextBlock>
-                <TextBox Text="{Binding MonthlyPayment, StringFormat='{}0:c'}" />
+                <TextBox Text="{Binding MonthlyPayment, StringFormat=c}" />
             </StackPanel>
             <!--Row 2 Elements-->
             <StackPanel Grid.Column="0"
@@ -94,7 +95,7 @@
             <StackPanel Grid.Column="1"
                         Grid.Row="2">
                 <TextBlock Padding="10,15,10,10">Final Payment Date</TextBlock>
-                <TextBox Text="{Binding FinalDate, StringFormat='{}{0:dd.MM.yyyy}'}" />
+                <TextBlock Text="{Binding FinalDate, StringFormat=d}" />
             </StackPanel>
             <StackPanel Grid.Column="3"
                         Grid.Row="2">
@@ -111,7 +112,9 @@
             <Calendar Grid.Row="3"
                       Grid.RowSpan="2"
                       Margin="20"
-                      SelectedDatesChanged="CalendarChanged" />
+                      SelectedDate="{Binding StartDate}"
+                      DisplayDate="{Binding StartDate}"
+                    />
             <DockPanel Grid.Column="1"
                        Grid.Row="3"
                        Grid.ColumnSpan="3">
@@ -124,7 +127,7 @@
                                Fill="Blue" />
                     <TextBlock Margin="15,0"
                                FontSize="20"
-                               Text="{Binding PercentInterest}" />
+                               Text="{Binding PercentInterest, StringFormat=p2}" />
                     <TextBlock Margin="15,0">% Interest</TextBlock>
                 </StackPanel>
                 <StackPanel DockPanel.Dock="Left">
@@ -137,13 +140,12 @@
                     <TextBlock Margin="15,0"
                                HorizontalAlignment="Center"
                                FontSize="20"
-                               Text="{Binding PercentPrincipal}" />
+                               Text="{Binding PercentPrincipal, StringFormat=p2}" />
                     <TextBlock Margin="15,0"
                                HorizontalAlignment="Center">% Principal</TextBlock>
                 </StackPanel>
             </DockPanel>
-            <Image  DataContext="{Binding Path=NewLoan}"
-                    Height="50"
+            <Image  Height="50"
                     Grid.Row="3"
                     Grid.Column="5"
                     Source="{Binding EmotionImage}" />

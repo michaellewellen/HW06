@@ -11,22 +11,67 @@ namespace HW06
 {
     public class Mortgage : INotifyPropertyChanged
     {
+        public Mortgage()
+        {
+            StartDate = DateTime.Now;
+            PurchasePrice = 100000;
+            IntSlider = 4;
+            YrsSlider = 30;
+        }
+
         public Mortgage(double purchasePrice, double downPayment, double intSlider, int yrsSlider)
         {
             PurchasePrice = purchasePrice;
             DownPayment = downPayment;
-            IntSlider = intSlider/1200;
-            YrsSlider = yrsSlider*12;
-            MortgageAmount = PurchasePrice - DownPayment;
+            IntSlider = intSlider;
+            YrsSlider = yrsSlider;
+            StartDate = DateTime.Now;
+        }
+        private double monthlyPayment;
+        private double purchasePrice;
+        private double downPayment;
+        private double intSlider;
+        private int yrsSlider;
+        private DateTime startDate;
+        private double totalInterest;
+        private double totalPrincipal;
+        private double interestHeight;
+        private double principalHeight;
+        private double percentInterest;
+        private double percentPrincipal;
+        private BitmapImage emotionImage;
 
+
+
+        public double MortgageAmount
+        {
+            get { return PurchasePrice-DownPayment; }
+        }
+
+        public double MonthlyPayment
+        {
+            get { return monthlyPayment; }
+            set { SetField(ref monthlyPayment, value); }
+        }
+        public double PurchasePrice
+        {
+            get { return purchasePrice; }
+            set { SetField(ref purchasePrice, value);
+                OnPropertyChanged(nameof(MortgageAmount));
+                Calculate();
+            }
+        }
+
+        private void Calculate()
+        {
             // Calculate Monthly Payment
-            double expo = Math.Pow((1 + (IntSlider)), YrsSlider);
-            double d = (expo - 1) / ((IntSlider) * expo);
+            double expo = Math.Pow((1 + (IntSlider/1200)), YrsSlider*12);
+            double d = (expo - 1) / ((IntSlider/1200) * expo);
             double amount = MortgageAmount / d;
             MonthlyPayment = Math.Round(amount, 2);
 
             // Other fields
-            TotalInterest = MonthlyPayment * YrsSlider - MortgageAmount;
+            TotalInterest = MonthlyPayment * YrsSlider*12 - MortgageAmount;
             TotalPrincipal = MortgageAmount;
             PercentInterest = TotalInterest / (MonthlyPayment * 12 * YrsSlider);
             PercentPrincipal = 1 - PercentInterest;
@@ -44,68 +89,42 @@ namespace HW06
             {
                 EmotionImage = new BitmapImage(new Uri(@"Resources\neutral.png", UriKind.Relative));
             }
-
-
-        }
-        private double mortgageAmount;
-        private double monthlyPayment;
-        private double purchasePrice;
-        private double downPayment;
-        private double intSlider;
-        private int yrsSlider;
-        private DateTime startDate;
-        private DateTime finalDate;
-        private double totalInterest;
-        private double totalPrincipal;
-        private double interestHeight;
-        private double principalHeight;
-        private double percentInterest;
-        private double percentPrincipal;
-        private BitmapImage emotionImage;
-
-
-
-        public double MortgageAmount
-        {
-            get { return mortgageAmount; }
-            set { SetField(ref mortgageAmount, value); }
-        }
-        public double MonthlyPayment
-        {
-            get { return monthlyPayment; }
-            set { SetField(ref monthlyPayment, value); }
-        }
-        public double PurchasePrice
-        {
-            get { return purchasePrice; }
-            set { SetField(ref purchasePrice, value); }
         }
 
         public double DownPayment
         {
             get { return downPayment; }
-            set { SetField(ref downPayment, value); }
+            set { SetField(ref downPayment, value);
+                OnPropertyChanged(nameof(MortgageAmount));
+                Calculate();
+            }
         }
         public double IntSlider
         {
             get { return intSlider; }
-            set { SetField(ref intSlider, value); }
+            set
+            {
+                SetField(ref intSlider, value);
+                Calculate();
+            }
         }
         public int YrsSlider
         {
             get { return yrsSlider; }
-            set { SetField(ref yrsSlider, value); }
+            set { SetField(ref yrsSlider, value);
+                OnPropertyChanged(nameof(FinalDate));
+                Calculate();
+            }
         }
         public DateTime StartDate
         {
             get { return startDate; }
-            set { SetField(ref startDate, value); }
+            set { SetField(ref startDate, value);
+                OnPropertyChanged(nameof(FinalDate));
+            }
         }
-        public DateTime FinalDate
-        {
-            get { return finalDate; }
-            set { SetField(ref finalDate, value); }
-        }
+        public DateTime FinalDate => StartDate.AddYears(YrsSlider);
+       
         public double TotalInterest
         {
             get { return totalInterest; }
