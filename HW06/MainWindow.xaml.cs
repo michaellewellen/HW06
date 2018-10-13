@@ -25,5 +25,9 @@ namespace HW06
             InitializeComponent();
         }
 
+        public void QuitGame(object sender, RoutedEventArgs e)
+        {
+            System.Windows.Application.Current.Shutdown();
+        }
     }
 }

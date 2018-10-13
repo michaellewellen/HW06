@@ -9,7 +9,7 @@ using System.Windows.Media.Imaging;
 
 namespace HW06
 {
-    public class Mortgage : INotifyPropertyChanged
+    public class Mortgage : INotifyPropertyChanged , IDataErrorInfo
     {
         public Mortgage()
         {
@@ -31,7 +31,7 @@ namespace HW06
         private double purchasePrice;
         private double downPayment;
         private double intSlider;
-        private int yrsSlider;
+        private double yrsSlider;
         private DateTime startDate;
         private double totalInterest;
         private double totalPrincipal;
@@ -75,13 +75,13 @@ namespace HW06
             TotalPrincipal = MortgageAmount;
             PercentInterest = TotalInterest / (MonthlyPayment * 12 * YrsSlider);
             PercentPrincipal = 1 - PercentInterest;
-            InterestHeight = 100 * PercentInterest;
-            PrincipalHeight = 100 * PercentPrincipal;
-            if (PercentInterest <= .4)
+            InterestHeight = 150 * PercentInterest;
+            PrincipalHeight = 150 * PercentPrincipal;
+            if (PercentInterest <= .3)
             {
                 EmotionImage = new BitmapImage(new Uri(@"Resources\Happy.png", UriKind.Relative));
             }
-            else if (PercentInterest >= .6)
+            else if (PercentInterest >= .5)
             {
                 EmotionImage = new BitmapImage(new Uri(@"Resources\Sad.png", UriKind.Relative));
             }
@@ -108,7 +108,7 @@ namespace HW06
                 Calculate();
             }
         }
-        public int YrsSlider
+        public double YrsSlider
         {
             get { return yrsSlider; }
             set { SetField(ref yrsSlider, value);
@@ -123,7 +123,7 @@ namespace HW06
                 OnPropertyChanged(nameof(FinalDate));
             }
         }
-        public DateTime FinalDate => StartDate.AddYears(YrsSlider);
+        public DateTime FinalDate => StartDate.AddYears((int)YrsSlider);
        
         public double TotalInterest
         {
@@ -159,6 +159,21 @@ namespace HW06
         {
             get { return emotionImage; }
             set { SetField(ref emotionImage, value); }
+        }
+
+        public string Error => throw new NotImplementedException();
+
+        public string this[string propertyName]
+        {
+            get
+            {
+                if(propertyName == nameof(IntSlider))
+                {
+                    if(IntSlider >= 0) { return null; }
+                    else { return "Interest must be a positive value"; }
+                }
+                return null;
+            }
         }
 
         #region INotifyPropertyChanged Implementation
