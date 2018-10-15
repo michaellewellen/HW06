@@ -23,6 +23,8 @@ namespace HW06
         public MainWindow()
         {
             InitializeComponent();
+            this.DataContext = new Mortgage();
+                
         }
 
         public void QuitGame(object sender, RoutedEventArgs e)

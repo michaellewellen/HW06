@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using System.Windows.Media.Imaging;
 
 namespace HW06
@@ -17,6 +18,12 @@ namespace HW06
             PurchasePrice = 100000;
             IntSlider = 4;
             YrsSlider = 30;
+            SolveForMonthlyPayment = true;
+            SolveForLoanPeriod = false;
+            SolveForPurchasePrice = false;
+            List<int> termList = new List<int> { 5, 10, 15, 30 };
+            
+
         }
 
         public Mortgage(double purchasePrice, double downPayment, double intSlider, int yrsSlider)
@@ -27,6 +34,10 @@ namespace HW06
             YrsSlider = yrsSlider;
             StartDate = DateTime.Now;
         }
+        private List<int> termList;
+        private Boolean solveForMonthlyPayment;
+        private Boolean solveForLoanPeriod;
+        private Boolean solveForPurchasePrice;
         private double monthlyPayment;
         private double purchasePrice;
         private double downPayment;
@@ -41,8 +52,86 @@ namespace HW06
         private double percentPrincipal;
         private BitmapImage emotionImage;
 
+        private ICommand solveForMP;
+        public ICommand SolveForMP
+        {
+            get
+            {
+                return solveForMP
+                    ??(solveForMP = new ActionCommand(() =>
+                    {
+                        makeMPChanges();
+                    }));
+            }
+        }
+        private ICommand solveForLP;
+        public ICommand SolveForLP
+        {
+            get
+            {
+                return solveForLP
+                    ?? (solveForLP = new ActionCommand(() =>
+                    {
+                        makeLPChanges();
+                    }));
+            }
+        }
+        private ICommand solveForPP;
+        public ICommand SolveForPP
+        {
+            get
+            {
+                return solveForPP
+                    ?? (solveForPP = new ActionCommand(() =>
+                    {
+                        makePPChanges();
+                    }));
+            }
+        }
 
+        public void makeMPChanges()
+        {
+            SolveForMonthlyPayment = true;
+            SolveForLoanPeriod = false;
+            SolveForPurchasePrice = false;
+        }
+        public void makeLPChanges()
+        {
+            SolveForMonthlyPayment = false;
+            SolveForLoanPeriod = true;
+            SolveForPurchasePrice = false;
+        }
+        public void makePPChanges()
+        {
+            SolveForMonthlyPayment = false;
+            SolveForLoanPeriod = false;
+            SolveForPurchasePrice = true;
+        }
 
+        public Boolean SolveForMonthlyPayment
+        {
+            get { return solveForMonthlyPayment; }
+            set { SetField(ref solveForMonthlyPayment, value); }
+        }
+
+        public Boolean SolveForLoanPeriod
+        {
+            get { return solveForLoanPeriod; }
+            set { SetField(ref solveForLoanPeriod, value); }
+        }
+
+        public Boolean SolveForPurchasePrice
+        {
+            get { return solveForPurchasePrice; }
+            set { SetField(ref solveForPurchasePrice, value); }
+        }
+
+        public List<int> TermList
+        {
+            get { return termList; }
+            set { SetField(ref termList, value); }
+
+        }
         public double MortgageAmount
         {
             get { return PurchasePrice-DownPayment; }
@@ -172,9 +261,29 @@ namespace HW06
                     if(IntSlider >= 0) { return null; }
                     else { return "Interest must be a positive value"; }
                 }
+
+                if(propertyName == nameof(YrsSlider))
+                {
+                    if(YrsSlider >=0) { return null; }
+                    else { return "Mortgage Period must be a postiive value"; }
+                }
+
+                if(propertyName == nameof(PurchasePrice))
+                {
+                    if(PurchasePrice >=0) { return null; }
+                    else { return "Purchase Price must be a postiive value"; }
+                }
+
+                if(propertyName == nameof(DownPayment))
+                {
+                    if(DownPayment < PurchasePrice) { return null; }
+                    else { return "Down Payment cannot equal or exceed Purchase Price"; }
+                }
                 return null;
             }
         }
+
+       
 
         #region INotifyPropertyChanged Implementation
         public event PropertyChangedEventHandler PropertyChanged;
@@ -192,5 +301,27 @@ namespace HW06
             return true;
         }
         #endregion
+    }
+
+    public class ActionCommand : ICommand
+    {
+        private readonly Action _action;
+
+        public ActionCommand(Action action)
+        {
+            _action = action;
+        }
+
+        public void Execute(object parameter)
+        {
+            _action();
+        }
+
+        public bool CanExecute(object parameter)
+        {
+            return true;
+        }
+
+        public event EventHandler CanExecuteChanged;
     }
 }
