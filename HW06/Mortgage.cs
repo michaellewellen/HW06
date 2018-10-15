@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -21,9 +22,15 @@ namespace HW06
             SolveForMonthlyPayment = true;
             SolveForLoanPeriod = false;
             SolveForPurchasePrice = false;
-            List<int> termList = new List<int> { 5, 10, 15, 30 };
-            
-
+            termList = new ObservableCollection<LoanPeriod>();
+            LoanPeriod temp = new LoanPeriod(1, 5);
+            LoanPeriod temp1 = new LoanPeriod(2, 10);
+            LoanPeriod temp2 = new LoanPeriod(3, 15);
+            LoanPeriod temp3 = new LoanPeriod(4, 30);
+            TermList.Add(temp);
+            TermList.Add(temp1);
+            TermList.Add(temp2);
+            TermList.Add(temp3);
         }
 
         public Mortgage(double purchasePrice, double downPayment, double intSlider, int yrsSlider)
@@ -34,7 +41,6 @@ namespace HW06
             YrsSlider = yrsSlider;
             StartDate = DateTime.Now;
         }
-        private List<int> termList;
         private Boolean solveForMonthlyPayment;
         private Boolean solveForLoanPeriod;
         private Boolean solveForPurchasePrice;
@@ -42,7 +48,7 @@ namespace HW06
         private double purchasePrice;
         private double downPayment;
         private double intSlider;
-        private double yrsSlider;
+        private int yrsSlider;
         private DateTime startDate;
         private double totalInterest;
         private double totalPrincipal;
@@ -126,12 +132,13 @@ namespace HW06
             set { SetField(ref solveForPurchasePrice, value); }
         }
 
-        public List<int> TermList
+        private ObservableCollection<LoanPeriod> termList;
+        public ObservableCollection<LoanPeriod> TermList
         {
             get { return termList; }
-            set { SetField(ref termList, value); }
-
         }
+
+
         public double MortgageAmount
         {
             get { return PurchasePrice-DownPayment; }
@@ -150,6 +157,8 @@ namespace HW06
                 Calculate();
             }
         }
+
+
 
         private void Calculate()
         {
@@ -197,7 +206,7 @@ namespace HW06
                 Calculate();
             }
         }
-        public double YrsSlider
+        public int YrsSlider
         {
             get { return yrsSlider; }
             set { SetField(ref yrsSlider, value);

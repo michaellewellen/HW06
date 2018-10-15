@@ -35,5 +35,13 @@ namespace MortgageProjectTests
             Mortgage testMortgage = new Mortgage(100000, 0, 4, 30);
             Assert.AreEqual(.42, Math.Round(testMortgage.TotalInterest/(testMortgage.TotalInterest+testMortgage.TotalPrincipal),2));
         }
+
+        [TestMethod]
+        public void TestErrorCondition()
+        {
+            var vm = new Mortgage();
+            vm.PurchasePrice = -10000;
+            Assert.AreEqual(vm[nameof(vm.PurchasePrice)], "Purchase Price must be a postiive value");
+        }
     }
 }
